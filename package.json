@@ -1,0 +1,32 @@
+{
+  "name": "@appnigma/integrations-client",
+  "version": "0.1.0",
+  "description": "Official Node.js SDK for Appnigma Integrations API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "appnigma",
+    "salesforce",
+    "integration",
+    "sdk"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/appnigma/integrations-client-node"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "dependencies": {
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
