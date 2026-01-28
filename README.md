@@ -316,4 +316,4 @@ MIT
 
 ## Support
 
-For issues, questions, or contributions, please visit our [GitHub repository](https://github.com/appnigma/integrations-client-node).
+For issues, questions, or contributions, please visit our [GitHub repository](https://github.com/appnigma/appnigma-integrations-node).
