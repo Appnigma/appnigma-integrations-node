@@ -27,7 +27,7 @@ const client = new AppnigmaClient({
 // Get connection credentials
 const credentials = await client.getConnectionCredentials(
   'connectionId',
-  'integrationId' // Optional if API key is integration-scoped
+  'integrationId' // Optional - extracted from API key if not provided
 );
 
 // Make a proxied Salesforce API call
@@ -38,7 +38,7 @@ const response = await client.proxySalesforceRequest(
     path: '/services/data/v59.0/query',
     query: { q: 'SELECT Id, Name FROM Account LIMIT 10' }
   },
-  'integrationId' // Optional
+  'integrationId' // Optional - extracted from API key if not provided
 );
 ```
 
@@ -70,7 +70,7 @@ const client = new AppnigmaClient({
 });
 ```
 
-**Note**: API keys are integration-scoped. If your API key is scoped to a specific integration, you don't need to provide the `integrationId` parameter in method calls.
+**Note**: API keys are integration-scoped. The `integrationId` parameter is optional and will be automatically extracted from your API key if not provided.
 
 ## API Reference
 
@@ -97,7 +97,7 @@ Retrieve decrypted access token and metadata for a Salesforce connection.
 
 **Parameters:**
 - `connectionId` (string, required): The connection ID
-- `integrationId` (string, optional): Integration ID. Required if API key is not integration-scoped.
+- `integrationId` (string, optional): Integration ID. Automatically extracted from API key if not provided.
 
 **Returns:** `Promise<ConnectionCredentials>`
 
@@ -131,7 +131,7 @@ Make a proxied API call to Salesforce with automatic token refresh and usage tra
   - `path` (required): Salesforce API path (e.g., '/services/data/v59.0/query')
   - `query` (optional): Query parameters as key-value pairs
   - `data` (optional): Request body data (for POST, PUT, PATCH)
-- `integrationId` (string, optional): Integration ID. Required if API key is not integration-scoped.
+- `integrationId` (string, optional): Integration ID. Automatically extracted from API key if not provided.
 
 **Returns:** `Promise<T>` - Raw Salesforce API response (unparsed)
 
