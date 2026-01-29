@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { AppnigmaClientConfig, ConnectionCredentials, SalesforceProxyRequest, ListConnectionsResponse, ListConnectionsOptions } from './types.js';
 import { AppnigmaAPIError } from './errors.js';
 
-const SDK_VERSION = '0.1.2';
+const SDK_VERSION = '0.1.3';
 const DEFAULT_BASE_URL = 'https://integrations.appnigma.ai';
 const DEFAULT_TIMEOUT = 30000; // 30 seconds
 
