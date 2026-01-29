@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { AppnigmaClientConfig, ConnectionCredentials, SalesforceProxyRequest } from './types.js';
+import { AppnigmaClientConfig, ConnectionCredentials, SalesforceProxyRequest, ListConnectionsResponse, ListConnectionsOptions } from './types.js';
 import { AppnigmaAPIError } from './errors.js';
 
 const SDK_VERSION = '0.1.2';
@@ -34,6 +34,53 @@ export class AppnigmaClient {
 
     // Remove trailing slash from baseUrl if present
     this.baseUrl = this.baseUrl.replace(/\/$/, '');
+  }
+
+  /**
+   * List connections for the integration (integration from API key or options)
+   * @param options - Optional filters and pagination (integrationId, environment, status, search, limit, cursor)
+   * @returns Promise resolving to list of connection summaries
+   * @throws {AppnigmaAPIError} If the API request fails
+   */
+  async listConnections(options?: ListConnectionsOptions): Promise<ListConnectionsResponse> {
+    const headers: Record<string, string> = {
+      'Authorization': `Bearer ${this.apiKey}`,
+      'User-Agent': `Appnigma-Integrations-Client-Node/${SDK_VERSION}`
+    };
+
+    if (options?.integrationId) {
+      headers['X-Integration-Id'] = options.integrationId;
+    }
+
+    const params = new URLSearchParams();
+    if (options?.environment !== undefined) params.set('environment', String(options.environment));
+    if (options?.status !== undefined) params.set('status', String(options.status));
+    if (options?.search !== undefined) params.set('search', String(options.search));
+    if (options?.limit !== undefined) params.set('limit', String(options.limit));
+    if (options?.cursor !== undefined) params.set('cursor', String(options.cursor));
+
+    const queryString = params.toString();
+    const url = `${this.baseUrl}/api/v1/connections${queryString ? `?${queryString}` : ''}`;
+
+    if (this.debug) {
+      this.logRequest('GET', url, headers, undefined);
+    }
+
+    try {
+      const response = await axios.get<ListConnectionsResponse>(url, {
+        headers,
+        timeout: DEFAULT_TIMEOUT
+      });
+
+      if (this.debug) {
+        this.logResponse('GET', url, response.status, response.data);
+      }
+
+      return response.data;
+    } catch (error) {
+      const apiError = this.handleError(error, 'GET', url);
+      throw apiError;
+    }
   }
 
   /**

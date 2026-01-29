@@ -43,6 +43,42 @@ export interface SalesforceProxyRequest {
 }
 
 /**
+ * Summary of a connection (list response item)
+ */
+export interface ConnectionSummary {
+  connectionId: string;
+  userEmail: string;
+  userName: string;
+  orgName: string;
+  environment: string;
+  region: string;
+  status: string;
+  connectedAt: string;
+  lastActiveAt: string;
+}
+
+/**
+ * Response from list connections API
+ */
+export interface ListConnectionsResponse {
+  connections: ConnectionSummary[];
+  totalCount: number;
+  nextCursor?: string;
+}
+
+/**
+ * Options for list connections
+ */
+export interface ListConnectionsOptions {
+  integrationId?: string;
+  environment?: string;
+  status?: string;
+  search?: string;
+  limit?: number;
+  cursor?: string;
+}
+
+/**
  * Error response structure from API
  */
 export interface AppnigmaError {

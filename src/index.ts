@@ -8,6 +8,9 @@ export { AppnigmaAPIError } from './errors.js';
 export type {
   AppnigmaClientConfig,
   ConnectionCredentials,
+  ConnectionSummary,
+  ListConnectionsResponse,
+  ListConnectionsOptions,
   SalesforceProxyRequest,
   AppnigmaError
 } from './types.js';
