@@ -44,6 +44,29 @@ async function getCredentials(connectionId: string) {
 }
 ```
 
+### List Connections
+
+```typescript
+async function listConnections(client: AppnigmaClient) {
+  const result = await client.listConnections();
+  console.log(`Total connections: ${result.totalCount}`);
+  result.connections.forEach(conn => {
+    console.log(`${conn.connectionId}: ${conn.userEmail} - ${conn.status}`);
+  });
+  return result;
+}
+
+// With filters and pagination
+async function listConnectedUsers(client: AppnigmaClient) {
+  const result = await client.listConnections({
+    status: 'connected',
+    environment: 'production',
+    limit: 50
+  });
+  return result.connections;
+}
+```
+
 ## Salesforce API Operations
 
 ### SOQL Queries

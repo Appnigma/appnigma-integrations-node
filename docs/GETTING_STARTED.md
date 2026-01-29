@@ -91,6 +91,20 @@ const client = new AppnigmaClient({
 
 ## Basic Usage
 
+### Listing Connections
+
+List connections for the integration (integration is derived from your API key):
+
+```typescript
+const result = await client.listConnections();
+console.log(`Found ${result.totalCount} connections`);
+result.connections.forEach(conn => {
+  console.log(conn.connectionId, conn.userEmail, conn.status);
+});
+```
+
+Optional filters: `environment`, `status`, `search`, `limit`, `cursor` (pagination).
+
 ### Getting Connection Credentials
 
 Retrieve access tokens and metadata for a Salesforce connection:

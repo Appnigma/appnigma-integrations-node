@@ -91,6 +91,61 @@ console.log('Expires At:', credentials.expiresAt);
 - `404`: Not Found - Connection, Integration, or Company not found
 - `500`: Internal Server Error - Server error or token refresh failure
 
+#### `listConnections(options?)`
+
+Lists connections for the integration. The integration is derived from the API key (integration-scoped); you can optionally pass `integrationId` in options when using a company-level key.
+
+**Signature:**
+```typescript
+async listConnections(
+  options?: ListConnectionsOptions
+): Promise<ListConnectionsResponse>
+```
+
+**Parameters:**
+- `options` (optional): Filtering and pagination
+  - `integrationId` (optional, string): Integration ID. Automatically extracted from API key if not provided.
+  - `environment` (optional, string): Filter by environment (e.g., `'production'`, `'sandbox'`).
+  - `status` (optional, string): Filter by status (e.g., `'connected'`).
+  - `search` (optional, string): Search by user email (case-insensitive).
+  - `limit` (optional, number): Page size (default 20).
+  - `cursor` (optional, string): Pagination cursor from a previous response's `nextCursor`.
+
+**Returns:** `Promise<ListConnectionsResponse>` - List of connection summaries and pagination info
+
+**Throws:** `AppnigmaAPIError` if the API request fails
+
+**Example:**
+```typescript
+// List all connections (integration from API key)
+const result = await client.listConnections();
+console.log(`Total: ${result.totalCount}`);
+result.connections.forEach(conn => {
+  console.log(`${conn.connectionId}: ${conn.userEmail} (${conn.status})`);
+});
+
+// With filters and pagination
+const page1 = await client.listConnections({ limit: 10, status: 'connected' });
+if (page1.nextCursor) {
+  const page2 = await client.listConnections({ limit: 10, cursor: page1.nextCursor });
+}
+```
+
+**Response Structure:**
+```typescript
+{
+  connections: ConnectionSummary[];  // Array of connection summaries
+  totalCount: number;                 // Number of items in this page
+  nextCursor?: string;                // Present if more pages exist
+}
+```
+
+**Error Codes:**
+- `401`: Unauthorized - Invalid or revoked API key
+- `403`: Forbidden - API key doesn't match integration
+- `404`: Not Found - Integration or Company not found
+- `500`: Internal Server Error - Server error
+
 #### `proxySalesforceRequest<T>(connectionId, requestData, integrationId?)`
 
 Makes a proxied API call to Salesforce with automatic token refresh and usage tracking.
@@ -183,6 +238,51 @@ interface ConnectionCredentials {
   region: string;      // Geographic region code
   tokenType: string;   // Usually "Bearer"
   expiresAt: string;  // ISO 8601 expiration timestamp
+}
+```
+
+### ConnectionSummary
+
+Summary of a connection (item in list connections response).
+
+```typescript
+interface ConnectionSummary {
+  connectionId: string;
+  userEmail: string;
+  userName: string;
+  orgName: string;
+  environment: string;
+  region: string;
+  status: string;
+  connectedAt: string;
+  lastActiveAt: string;
+}
+```
+
+### ListConnectionsResponse
+
+Response from the list connections API.
+
+```typescript
+interface ListConnectionsResponse {
+  connections: ConnectionSummary[];
+  totalCount: number;
+  nextCursor?: string;  // Present when more pages exist
+}
+```
+
+### ListConnectionsOptions
+
+Options for listing connections (filters and pagination).
+
+```typescript
+interface ListConnectionsOptions {
+  integrationId?: string;
+  environment?: string;
+  status?: string;
+  search?: string;
+  limit?: number;
+  cursor?: string;
 }
 ```
 

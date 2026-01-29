@@ -120,6 +120,21 @@ console.log(credentials.instanceUrl);
 }
 ```
 
+##### `listConnections(options?)`
+
+List connections for the integration (integration from API key).
+
+**Parameters:**
+- `options` (optional): `integrationId`, `environment`, `status`, `search`, `limit`, `cursor`
+
+**Returns:** `Promise<ListConnectionsResponse>` with `connections`, `totalCount`, `nextCursor?`
+
+**Example:**
+```typescript
+const result = await client.listConnections({ limit: 10 });
+result.connections.forEach(conn => console.log(conn.connectionId, conn.userEmail));
+```
+
 ##### `proxySalesforceRequest<T>(connectionId, requestData, integrationId?)`
 
 Make a proxied API call to Salesforce with automatic token refresh and usage tracking.
